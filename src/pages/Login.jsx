@@ -65,28 +65,28 @@ const Login = () => {
                     {isLoading && <Loader />}
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Group className="mb-3">
-                            <Form.Label>{translate("auth.login..email")}</Form.Label>
+                            <Form.Label>{translate("auth.login.email")}</Form.Label>
                             <InputGroup>
                                 <InputGroup.Text><FaUser /></InputGroup.Text>
                                 <Form.Control
                                     type="email"
                                     {...register("email")}
                                     isInvalid={!!errors.email}
-                                    placeholder={translate("auth.login..emailPlaceholder")}
+                                    placeholder={translate("auth.login.emailPlaceholder")}
                                 />
                                 <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>{translate("auth.login..password")}</Form.Label>
+                            <Form.Label>{translate("auth.login.password")}</Form.Label>
                             <InputGroup>
                                 <InputGroup.Text><FaLock /></InputGroup.Text>
                                 <Form.Control
                                     type="password"
                                     {...register("password")}
                                     isInvalid={!!errors.password}
-                                    placeholder={translate("auth.login..passwordPlaceholder")}
+                                    placeholder={translate("auth.login.passwordPlaceholder")}
                                 />
                                 <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
                             </InputGroup>
