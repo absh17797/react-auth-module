@@ -1,0 +1,26 @@
+{
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "loading": "Logging in...",
+      "success": "Login successful!",
+      "error": "Login failed!",
+      "emailPlaceholder": "Enter your Email",
+      "passwordPlaceholder": "Enter your Password"
+    }
+  },
+  "profile": {
+    "details": "Profile Details",
+    "id": "Identifier ID",
+    "name": "Name",
+    "noDataAvailable": "No data available.",
+    "errorLoadingProfile": "Failed to load profile"
+  },
+  "general": {
+    "userList": "User List",
+    "reactAuthModule": "React Auth Module"
+  }
+}

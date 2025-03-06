@@ -1,58 +1,86 @@
-// src/components/Navbar.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../features/auth/authSlice';
-import { Dropdown } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+import { Navbar, Nav, Container, Dropdown, Button } from "react-bootstrap";
+import LanguageSwitcher from "./languageSwitcher";
+import { translate } from "../utils/translate";
+import i18n from "../utils/i18n";
 
-const Navbar = () => {
+
+const CustomNavbar = () => {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth); // Get the token from the auth slice
+  const { token } = useSelector((state) => state.auth); // Get the token from auth state
+  const [language, setLanguage] = useState(i18n.language); // Track language state
 
   const handleLogout = () => {
     dispatch(logout());
   };
 
+  // Listen for language change
+  useEffect(() => {
+    const handleLanguageChange = () => setLanguage(i18n.language);
+    i18n.on("languageChanged", handleLanguageChange);
+    return () => {
+      i18n.off("languageChanged", handleLanguageChange);
+    };
+  }, []);
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">React Auth Modue App</Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
+    <Navbar expand="lg" bg="primary" variant="dark" className="shadow-sm">
+      <Container>
+        {/* Brand Logo */}
+        <Navbar.Brand as={Link} to="/" className="fw-bold">
+          🚀 {translate("general.reactAuthModule")}
+        </Navbar.Brand>
+
+        {/* Toggle Button for Mobile View */}
+        <Navbar.Toggle aria-controls="navbarNav" />
+
+        <Navbar.Collapse id="navbarNav">
+          <Nav className="me-auto">
             {!token && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">Login</Link>
-              </li>
+              <Nav.Link as={Link} to="/login" className="fw-semibold">
+                Login
+              </Nav.Link>
             )}
             {token && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/users">Users</Link>
-              </li>
+              <Nav.Link as={Link} to="/users" className="fw-semibold">
+                Users
+              </Nav.Link>
             )}
-            {token && ( // This should be true if the token exists
-              <Dropdown className="ms-auto">
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
+          </Nav>
+
+          {/* Right-aligned Items */}
+          <Nav className="ms-auto d-flex align-items-center">
+            <LanguageSwitcher />
+
+            {token && (
+              <Dropdown align="end" className="ms-3">
+                <Dropdown.Toggle variant="light" className="border-0 shadow-sm">
                   <img
-                    src="https://via.placeholder.com/30" // Dummy image URL
+                    src="https://via.placeholder.com/40"
                     alt="Profile"
-                    className="rounded-circle"
+                    className="rounded-circle border border-secondary"
+                    width="35"
+                    height="35"
                   />
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
-                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                <Dropdown.Menu className="shadow">
+                  <Dropdown.Item as={Link} to="/profile">👤 Profile</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={handleLogout} className="text-danger">
+                    🚪 Logout
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             )}
-          </ul>
-        </div>
-      </div>
-    </nav>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default CustomNavbar;

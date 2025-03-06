@@ -1,0 +1,26 @@
+{
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "loading": "Connexion en cours...",
+      "success": "Connexion réussie!",
+      "error": "Échec de la connexion!",
+      "emailPlaceholder": "Entrez votre e-mail",
+      "passwordPlaceholder": "Entrez votre mot de passe"
+    }
+  },
+  "profile": {
+    "details": "Détails du profil",
+    "id": "Identifiant",
+    "name": "Nom",
+    "noDataAvailable": "Aucune donnée disponible.",
+    "errorLoadingProfile": "Échec du chargement du profil"
+  },
+  "general": {
+    "userList": "Liste des utilisateurs",
+    "reactAuthModule": "Module d'authentification React"
+  }
+}

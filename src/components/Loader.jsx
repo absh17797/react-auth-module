@@ -3,9 +3,9 @@ import React from 'react';
 
 const Loader = () => {
   return (
-    <div className="loader">
+    <div className="loader-container">
+      <div className="spinner"></div>
       <h2>Loading...</h2>
-      {/* You can add a spinner or any loading animation here */}
     </div>
   );
 };

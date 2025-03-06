@@ -1,142 +1,105 @@
-// // src/pages/Login.jsx
-// import React from 'react';
-// import { useForm } from 'react-hook-form';
-// import { yupResolver } from '@hookform/resolvers/yup';
-// import * as yup from 'yup';
-// import { useLoginMutation } from '../features/auth/authApi';
-// import { useDispatch } from 'react-redux';
-// import { setCredentials } from '../features/auth/authSlice';
-// import { toast } from 'react-toastify';
-
-
-// const loginSchema = yup.object().shape({
-//     email: yup.string().email().required('Email is required'),
-//     password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-// });
-
-// const Login = () => {
-//     const dispatch = useDispatch();
-//     const navigate = useNavigate();
-
-//     const [login] = useLoginMutation();
-//     const { register, handleSubmit, formState: { errors } } = useForm({
-//         resolver: yupResolver(loginSchema),
-//     });
-
-//     const onSubmit = async (data) => {
-//         try {
-//             const result = await login(data).unwrap();
-//             console.log(`result -- Login--onSubmit-- ${JSON.stringify(result)}`)
-//             console.log(`result -- Login--result.user-- ${result.data.user}`)
-//             console.log(`result -- Login--result.token-- ${result.data.token}`)
-//             // dispatch(setCredentials({ 
-//             //     user: JSON.stringify(result.user), 
-//             //     token: JSON.stringify(result.token) 
-//             // }));
-//             dispatch(setCredentials({
-//                 user: result.data.data,
-//                 token: result.data.token
-//             }));
-//             toast.success('Login successful!');
-//             navigate('/profile'); // Redirect to profile after login
-//         } catch (err) {
-//             toast.error(err.data?.message || 'Login failed');
-//         }
-//     };
-//     return (
-//         <div>
-//             <h1>Login Page</h1>
-//             <form onSubmit={handleSubmit(onSubmit)}>
-//                 <div>
-//                     <label>Email</label>
-//                     <input type="email" {...register('email')} />
-//                     {errors.email && <span>{errors.email.message}</span>}
-//                 </div>
-//                 <div>
-//                     <label>Password</label>
-//                     <input type="password" {...register('password')} />
-//                     {errors.password && <span>{errors.password.message}</span>}
-//                 </div>
-//                 <button type="submit">Login</button>
-//             </form>
-//         </div>
-//     );
-// };
-
-// export default Login;
-
-
-
-
-// src/pages/Login.jsx
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useLoginMutation } from '../features/auth/authApi';
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../features/auth/authSlice';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { useLoginMutation } from "../features/auth/authApi";
+import { setCredentials } from "../features/auth/authSlice";
+import Loader from "../components/Loader";
+import * as yup from "yup";
+import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
+import { FaUser, FaLock } from "react-icons/fa";
+import { translate } from "../utils/translate";
+import i18n from "../utils/i18n";
 
 const loginSchema = yup.object().shape({
-    email: yup.string().email('Invalid email').required('Email is required'),
-    password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
 const Login = () => {
+    // Listen for language change
+    useEffect(() => {
+        const handleLanguageChange = () => setLanguage(i18n.language);
+        i18n.on("languageChanged", handleLanguageChange);
+        return () => {
+            i18n.off("languageChanged", handleLanguageChange);
+        };
+    }, []);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [login] = useLoginMutation();
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const [login, { isLoading }] = useLoginMutation();
+    const [language, setLanguage] = useState(i18n.language); // Track language state
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
         resolver: yupResolver(loginSchema),
     });
 
     const onSubmit = async (data) => {
         try {
             const result = await login(data).unwrap();
-            dispatch(setCredentials({
-                user: result.data.data,
-                token: result.data.token
-            })
+            dispatch(
+                setCredentials({
+                    user: result.data.data,
+                    token: result.data.token,
+                })
             );
-            toast.success('Login successful!');
-            navigate('/profile'); // Redirect to profile after login
+            toast.success(translate("auth.login.success"));
+            navigate("/profile");
         } catch (err) {
-            toast.error(err.data?.message || 'Login failed');
+            toast.error(translate("auth.login.error"));
         }
     };
 
     return (
-        <div className="container mt-5">
-            <h1 className="text-center">Login</h1>
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input
-                        type="email"
-                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                        id="email"
-                        {...register('email')}
-                    />
-                    {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                        id="password"
-                        {...register('password')}
-                    />
-                    {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
-                </div>
-                <button type="submit" className="btn btn-primary">Login</button>
-            </form>
-        </div>
+        <Container className="d-flex justify-content-center align-items-center vh-100">
+            <Card className="shadow-lg p-4 w-50" style={{ maxWidth: "400px" }}>
+                <Card.Body>
+                    <h2 className="text-center text-primary mb-4">{translate("auth.login.title")}</h2>
+                    {isLoading && <Loader />}
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>{translate("auth.login..email")}</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Text><FaUser /></InputGroup.Text>
+                                <Form.Control
+                                    type="email"
+                                    {...register("email")}
+                                    isInvalid={!!errors.email}
+                                    placeholder={translate("auth.login..emailPlaceholder")}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>{translate("auth.login..password")}</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Text><FaLock /></InputGroup.Text>
+                                <Form.Control
+                                    type="password"
+                                    {...register("password")}
+                                    isInvalid={!!errors.password}
+                                    placeholder={translate("auth.login..passwordPlaceholder")}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
+
+                        <Button variant="primary" type="submit" className="w-100" disabled={isLoading}>
+                            {isLoading ? translate("auth.login.loading") : translate("auth.login.submit")}
+                        </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
+        </Container>
     );
 };
 
 export default Login;
-
-
