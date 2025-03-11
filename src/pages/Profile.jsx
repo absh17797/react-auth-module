@@ -27,7 +27,7 @@ const Profile = () => {
     );
 
   if (error) {
-    toast.error(translate("profile.errorLoadingProfile"));
+    toast.error(error?.message || translate("profile.errorLoadingProfile"));
 
     return (
       <div className="text-center text-danger mt-5">

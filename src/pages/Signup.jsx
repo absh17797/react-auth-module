@@ -37,11 +37,11 @@ const Signup = () => {
 
     const onSubmit = async (data) => {
         try {
-            await signup(data);
+            await signup(data).unwrap();
             toast.success(translate("auth.signup.success"));
             navigate("/login");
         } catch (err) {
-            toast.error(err.message || translate("auth.signup.error"));
+            toast.error(err?.message || translate("auth.signup.error"));
         }
     };
 

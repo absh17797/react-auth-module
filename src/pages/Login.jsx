@@ -45,7 +45,7 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         try {
-            const result = await login(data);
+            const result = await login(data).unwrap();
             dispatch(
                 setCredentials({
                     user: result.data.data,
@@ -55,7 +55,7 @@ const Login = () => {
             toast.success(translate("auth.login.success"));
             navigate("/profile");
         } catch (err) {
-            toast.error(translate("auth.login.error"));
+            toast.error(err?.message || translate("auth.login.error"));
         }
     };
 
