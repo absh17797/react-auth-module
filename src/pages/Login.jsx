@@ -10,7 +10,7 @@ import { setCredentials } from "../features/auth/authSlice";
 import Loader from "../components/Loader";
 import * as yup from "yup";
 import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { translate } from "../utils/translate";
 import i18n from "../utils/i18n";
 
@@ -32,6 +32,8 @@ const Login = () => {
     const navigate = useNavigate();
     const [login, { isLoading }] = useLoginMutation();
     const [language, setLanguage] = useState(i18n.language); // Track language state
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const {
         register,
@@ -43,7 +45,7 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         try {
-            const result = await login(data).unwrap();
+            const result = await login(data);
             dispatch(
                 setCredentials({
                     user: result.data.data,
@@ -83,15 +85,25 @@ const Login = () => {
                             <InputGroup>
                                 <InputGroup.Text><FaLock /></InputGroup.Text>
                                 <Form.Control
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     {...register("password")}
                                     isInvalid={!!errors.password}
                                     placeholder={translate("auth.login.passwordPlaceholder")}
                                 />
-                                <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
+                                <InputGroup.Text
+                                    as="button"
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{ cursor: 'pointer' }}
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </InputGroup.Text>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.password?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
-
                         <Button variant="primary" type="submit" className="w-100" disabled={isLoading}>
                             {isLoading ? translate("auth.login.loading") : translate("auth.login.submit")}
                         </Button>

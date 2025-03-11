@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { Navbar, Nav, Container, Dropdown, Button } from "react-bootstrap";
@@ -10,6 +10,7 @@ import i18n from "../utils/i18n";
 
 const CustomNavbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth); // Get the token from auth state
   const [language, setLanguage] = useState(i18n.language); // Track language state
 
@@ -17,6 +18,10 @@ const CustomNavbar = () => {
     dispatch(logout());
   };
 
+  const handleLogoutAndSignUp = () => {
+    dispatch(logout());
+    navigate("/signup")
+  };
   // Listen for language change
   useEffect(() => {
     const handleLanguageChange = () => setLanguage(i18n.language);
@@ -44,9 +49,24 @@ const CustomNavbar = () => {
                 Login
               </Nav.Link>
             )}
+            {!token && (
+              <Nav.Link as={Link} to="/signup" className="fw-semibold">
+                Signup
+              </Nav.Link>
+            )}
             {token && (
               <Nav.Link as={Link} to="/users" className="fw-semibold">
                 Users
+              </Nav.Link>
+            )}
+
+            {token && (
+              <Nav.Link
+                onClick={handleLogoutAndSignUp}
+                className="fw-semibold"
+                style={{ cursor: 'pointer' }}
+              >
+                LogOut & Signup
               </Nav.Link>
             )}
           </Nav>

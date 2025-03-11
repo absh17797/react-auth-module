@@ -10,6 +10,18 @@
       "error": "Login failed!",
       "emailPlaceholder": "Enter your Email",
       "passwordPlaceholder": "Enter your Password"
+    },
+    "signup": {
+      "success": "Signup successful! You can login now.",
+      "error": "Signup failed!",
+      "title":"Signup",
+      "name":"Name",
+      "password":"Password",
+      "namePlaceholder": "Enter your Name",
+      "emailPlaceholder" : "Enter your Email",
+      "passwordPlaceholder": "Enter your Password",
+      "loading": "Loading",
+      "submit": "Submit"
     }
   },
   "profile": {

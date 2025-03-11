@@ -10,6 +10,19 @@
       "error": "Échec de la connexion!",
       "emailPlaceholder": "Entrez votre e-mail",
       "passwordPlaceholder": "Entrez votre mot de passe"
+    },
+    "signup": {
+      "success": "Inscription réussie!",
+      "error": "Échec de l'inscription!",
+      "title": "Inscription",
+      "name": "Nom",
+      "email": "Email",
+      "password": "Mot de passe",
+      "namePlaceholder": "Entrez votre nom",
+      "emailPlaceholder": "Entrez votre email",
+      "passwordPlaceholder": "Entrez votre mot de passe",
+      "loading": "Chargement",
+      "submit": "Soumettre"
     }
   },
   "profile": {

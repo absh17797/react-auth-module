@@ -41,8 +41,8 @@ const customBaseQuery = async (args, api, extraOptions) => {
     console.error('API call error:', result.error);
     return {
       error: {
-        message: result.error.message || 'An error occurred',
-        status: result.error.status,
+        message: result?.error?.data?.message || 'An error occurred',
+        status: result?.error?.status,
       },
     };
   }
